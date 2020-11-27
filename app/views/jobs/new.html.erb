@@ -1,0 +1,9 @@
+<div class='col-8' style='margin-top:20px'>
+<%= simple_form_for Job.new do |f| %>
+  <%= f.input :title, required: true, class: "form-control" %>
+  <%= f.input :salary_per_hour, as: :numeric, required: true %>
+  <%= f.input :languages, as: :select, collection: Language.all, label: 'Languages', include_hidden: false, input_html: { class: 'select2', multiple: true } %>
+  <%= f.input :shifts, as: :select, collection: Shift.all.map { |s| [s.period, s.id] }, label: 'Shifts', include_hidden: false, input_html: { class: 'select2', multiple: true } %>
+  <%= f.button :submit, class: "btn btn-primary" %>
+<% end %>
+</div>
