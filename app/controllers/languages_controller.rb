@@ -1,11 +1,19 @@
 class LanguagesController < ApplicationController
 
-  def new; end
+  def new
+    @language = Language.new
+    authorize! :manage, @language
+  end
 
   def create
-    @job = Language.new(language_params)
-    @job.save ? flash[:success] = 'Job was added' : flash[:error] = 'Job was not added'
-    redirect_to jobs_path
+    @language = Language.create(language_params)
+    if @language.save
+      flash[:success] = 'Job was added'
+      redirect_to new_job_path
+    else
+      flash[:error] = 'Job was not added'
+      render 'new'
+    end
   end
 
   private

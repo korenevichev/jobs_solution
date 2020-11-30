@@ -1,4 +1,7 @@
-<%= simple_form_for Language.new do |f| %>
-  <%= f.input :name, required: true %>
-  <%= f.button :submit %>
-<% end %>
+<div class='col-8' style='margin-top:20px'>
+  <%= simple_form_for @language do |f| %>
+    <%= f.error_notification %>
+    <%= f.input :name, required: true %>
+    <%= f.button :submit, class: 'btn btn-primary' %>
+  <% end %>
+</div>

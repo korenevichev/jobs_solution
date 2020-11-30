@@ -7,17 +7,20 @@ class JobsController < ApplicationController
   end
 
   def new
-    authorize! :manage, Job
+    @job = Job.new
+    authorize! :manage, @job
   end
 
   def create
     authorize! :manage, Job
-    if Job.create!(title: job_params.dig('title'), languages: languages, shifts: shifts)
+    @job = Job.create(title: job_params[:title], languages: languages, shifts: shifts, salary_per_hour: job_params[:salary_per_hour])
+    if @job.save
       flash[:success] = 'Job was added'
+      redirect_to jobs_path
     else
       flash[:error] = 'Job was not added'
+      render 'new'
     end
-    redirect_to jobs_path
   end
 
   def apply
@@ -50,6 +53,6 @@ class JobsController < ApplicationController
   end
 
   def job_params
-    params.require(:job).permit(:id, :title, languages: [], shifts: [])
+    params.require(:job).permit(:id, :title, :salary_per_hour, languages: [], shifts: [])
   end
 end

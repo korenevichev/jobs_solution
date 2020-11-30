@@ -1,3 +1,4 @@
+<div style='background-color: #b8daff'>
 <% if @jobs.empty? %>
   <div>No jobs here!</div>
 <% end %>
@@ -5,18 +6,19 @@
 <ul class='list-group'>
   <% @jobs.each do |job| %>
     <li class='list-group-item list-group-item-primary'>
-      <h1 class='text-center'> <%=job.title %></h1>
-      <h3 class='text-left'>Total salary: <%=job.total_salary %> €</h3>
+      <h1 class='text-center'> <%= job.title %></h1>
+      <h3 class='text-left'>Total salary: <%= job.total_salary %> €</h3>
       <h3 class='text-left'>Shifts:
-        <%job.shifts.each do |shift|%>
-          <p style='text-indent:100px'> <%="#{shift.period.first.strftime('%d.%m.%Y %H:%M')} - #{shift.period.last.strftime('%d.%m.%Y %H:%M')}"%></p>
-        <%end%>
+        <% job.shifts.each do |shift| %>
+          <p style='text-indent:100px'> <%= "#{shift.period.first.strftime('%d.%m.%Y %H:%M')} - #{shift.period.last.strftime('%d.%m.%Y %H:%M')}" %></p>
+        <% end %>
       </h3>
-     <div> <span class='badge badge-primary'> <%= job.languages.map(&:name).join(', ') %> </span></div>
+      <div><span class='badge badge-primary'> <%= job.languages.map(&:name).join(', ') %> </span></div>
       <div style='margin-top:20px'>
-      <button class="btn btn-primary"><%= link_to 'apply', apply_jobs_path(job_id: job.id), method: :post, class: 'btn-primary' %></button>
+        <button class="btn btn-primary"><%= link_to 'apply', apply_jobs_path(job_id: job.id), method: :post, class: 'btn-primary' %></button>
       </div>
     </li>
   <% end %>
   <%= will_paginate @jobs %>
 </ul>
+</div>
