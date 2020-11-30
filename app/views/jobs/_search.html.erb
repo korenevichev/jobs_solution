@@ -1,0 +1,7 @@
+<div class='col-8' style='margin-top:20px'>
+  <%= simple_form_for :search, method: :get, html: { class: 'search-form' } do |f| %>
+    <%= f.input :job, as: :search, input_html: { class: 'search-field', value: params.dig(:search, :job) } %>
+    <%= f.button :submit, class: "btn btn-search" %>
+  <% end %>
+</div>
+

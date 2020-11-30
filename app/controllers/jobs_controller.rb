@@ -1,6 +1,9 @@
 class JobsController < ApplicationController
+  PER_PAGE = 10
+
   def index
-    @jobs = Job.all
+    @jobs = params[:search].present? ? job_search_query : Job.all
+    @jobs = @jobs.paginate(page: params[:page], per_page: PER_PAGE)
   end
 
   def new
@@ -27,6 +30,14 @@ class JobsController < ApplicationController
   end
 
   private
+
+  def job_search_query
+    Job.includes(:languages).where("languages.name ILIKE :search OR title ILIKE :search", search: "%#{search_param}%").references(:languages)
+  end
+
+  def search_param
+    params[:search][:job]
+  end
 
   def shifts
     shift_ids = job_params.dig('shifts')

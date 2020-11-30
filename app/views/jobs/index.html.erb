@@ -1,6 +1,7 @@
 <% if @jobs.empty? %>
   <div>No jobs here!</div>
 <% end %>
+<%= render 'search' %>
 <ul class='list-group'>
   <% @jobs.each do |job| %>
     <li class='list-group-item list-group-item-primary'>
@@ -17,4 +18,5 @@
       </div>
     </li>
   <% end %>
+  <%= will_paginate @jobs %>
 </ul>
