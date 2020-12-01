@@ -6,7 +6,7 @@ class LanguagesController < ApplicationController
   end
 
   def create
-    @language = Language.create(language_params)
+    @language = Language.new(language_params)
     if @language.save
       flash[:success] = 'Job was added'
       redirect_to new_job_path

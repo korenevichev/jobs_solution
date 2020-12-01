@@ -1,7 +1,8 @@
 class Job < ActiveRecord::Base
   has_and_belongs_to_many :languages
   has_and_belongs_to_many :shifts
-  has_and_belongs_to_many :users
+  has_many :jobs_users
+  has_many :users, through: :jobs_users
 
   validates :title, :presence => true
   validates :title, :uniqueness => true

@@ -6,7 +6,7 @@ class ShiftsController < ApplicationController
   end
 
   def create
-    @shift = Shift.new(period: shift_params.dig('from')..shift_params.dig('to'))
+    @shift = Shift.new(from: from, to: to, period: from..to)
     if @shift.save
       flash[:success] = 'Shift was added'
       redirect_to new_job_path
@@ -17,6 +17,14 @@ class ShiftsController < ApplicationController
   end
 
   private
+
+  def from
+    shift_params.dig('from').to_time
+  end
+
+  def to
+    shift_params.dig('to').to_time
+  end
 
   def shift_params
     params.require(:shift).permit(:from, :to)

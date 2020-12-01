@@ -1,11 +1,10 @@
-<div style='background-color: #b8daff'>
 <% if @jobs.empty? %>
   <div>No jobs here!</div>
 <% end %>
 <%= render 'search' %>
 <ul class='list-group'>
   <% @jobs.each do |job| %>
-    <li class='list-group-item list-group-item-primary'>
+    <li class='list-group-item'>
       <h1 class='text-center'> <%= job.title %></h1>
       <h3 class='text-left'>Total salary: <%= job.total_salary %> €</h3>
       <h3 class='text-left'>Shifts:
@@ -21,4 +20,3 @@
   <% end %>
   <%= will_paginate @jobs %>
 </ul>
-</div>

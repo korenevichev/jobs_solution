@@ -12,13 +12,14 @@ class JobsController < ApplicationController
   end
 
   def create
-    authorize! :manage, Job
-    @job = Job.create(title: job_params[:title], languages: languages, shifts: shifts, salary_per_hour: job_params[:salary_per_hour])
+    @job = Job.new(title: job_params[:title],
+                   salary_per_hour: job_params[:salary_per_hour],
+                   languages: languages,
+                   shifts: shifts)
     if @job.save
       flash[:success] = 'Job was added'
       redirect_to jobs_path
     else
-      flash[:error] = 'Job was not added'
       render 'new'
     end
   end
@@ -27,15 +28,15 @@ class JobsController < ApplicationController
     authorize! :read, Job
     id = params.dig('job_id')
     job = Job.find(id)
-    redirect_to jobs_path, error: 'Job was not added' if current_user.jobs.include?(job)
-    # current_user.jobs << job
-    # current_user.save ? flash[:success] = 'was Applyed' : flash[:error] = 'not appluyf'
+    job.users << current_user ? flash[:success] = 'Applied' : flash[:error] = 'You have already applied'
   end
 
   private
 
   def job_search_query
-    Job.includes(:languages).where("languages.name ILIKE :search OR title ILIKE :search", search: "%#{search_param}%").references(:languages)
+    Job.includes(:languages).
+      where("languages.name ILIKE :search OR title ILIKE :search", search: "%#{search_param}%").
+      references(:languages)
   end
 
   def search_param
