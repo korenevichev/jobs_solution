@@ -24,6 +24,11 @@ RSpec.describe ShiftsController do
   end
 
   describe 'POST create' do
+    before(:each) do
+      admin = create(:user, :admin)
+      sign_in admin
+    end
+
     it 'redirect if successful' do
       post :create, params: { shift: { from: DateTime.now, to: DateTime.now + 1.hour } }
       expect(response.status).to eq(302)

@@ -32,6 +32,11 @@ RSpec.describe JobsController do
   end
 
   describe 'POST create' do
+    before(:each) do
+      admin = create(:user, :admin)
+      sign_in admin
+    end
+
     it 'redirect if successful' do
       language = create(:language)
       shift = create(:shift)
@@ -60,7 +65,7 @@ RSpec.describe JobsController do
       member = create(:user, :member)
       sign_in member
       post :apply, params: { job_id: job.id }
-      expect(response.status).to eq(204)
+      expect(response.status).to eq(302)
     end
 
     it 'forbidden as unauthorized' do

@@ -24,6 +24,11 @@ RSpec.describe LanguagesController do
   end
 
   describe 'POST create' do
+    before(:each) do
+      admin = create(:user, :admin)
+      sign_in admin
+    end
+
     it 'redirect if successful' do
       post :create, params: { language: { name: 'spanish' } }
       expect(response.status).to eq(302)

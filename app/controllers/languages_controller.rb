@@ -6,6 +6,7 @@ class LanguagesController < ApplicationController
   end
 
   def create
+    authorize! :manage, Language
     @language = Language.new(language_params)
     if @language.save
       flash[:success] = 'Job was added'

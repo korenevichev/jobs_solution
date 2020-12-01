@@ -6,6 +6,7 @@ class ShiftsController < ApplicationController
   end
 
   def create
+    authorize! :manage, Shift
     @shift = Shift.new(from: from, to: to, period: from..to)
     if @shift.save
       flash[:success] = 'Shift was added'

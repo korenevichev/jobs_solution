@@ -2,8 +2,9 @@ class JobsController < ApplicationController
   PER_PAGE = 10
 
   def index
-    @jobs = params[:search].present? ? job_search_query : Job.all
-    @jobs = @jobs.paginate(page: params[:page], per_page: PER_PAGE)
+    @jobs = Rails.cache.fetch('jobs', expires_in: 15.minutes) do
+      job_search_query
+    end.paginate(page: params[:page], per_page: PER_PAGE)
   end
 
   def new
@@ -12,6 +13,7 @@ class JobsController < ApplicationController
   end
 
   def create
+    authorize! :manage, Job
     @job = Job.new(title: job_params[:title],
                    salary_per_hour: job_params[:salary_per_hour],
                    languages: languages,
@@ -26,9 +28,8 @@ class JobsController < ApplicationController
 
   def apply
     authorize! :read, Job
-    id = params.dig('job_id')
-    job = Job.find(id)
-    job.users << current_user
+    job = Job.find(params[:job_id])
+    job.with_lock { job.users << current_user }
     flash[:success] = 'Applied'
   rescue ActiveRecord::RecordInvalid
     flash[:error] = 'You have already applied'
@@ -39,9 +40,13 @@ class JobsController < ApplicationController
   private
 
   def job_search_query
-    Job.includes(:languages).
-      where("languages.name ILIKE :search OR title ILIKE :search", search: "%#{search_param}%").
-      references(:languages)
+    scope = if params[:search].present?
+              Job.where("languages.name ILIKE :search OR title ILIKE :search", search: "%#{search_param}%")
+                .references(:languages)
+            else
+              Job.all
+            end
+    scope.includes(:languages, :shifts).order(:id)
   end
 
   def search_param
@@ -49,13 +54,11 @@ class JobsController < ApplicationController
   end
 
   def shifts
-    shift_ids = job_params.dig('shifts')
-    Shift.where(id: shift_ids)
+    Shift.where(id: job_params[:shifts])
   end
 
   def languages
-    language_ids = job_params.dig('languages')
-    Language.where(id: language_ids)
+    Language.where(id: job_params[:languages])
   end
 
   def job_params
