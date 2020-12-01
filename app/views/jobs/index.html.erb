@@ -1,5 +1,5 @@
 <% if @jobs.empty? %>
-  <div>No jobs here!</div>
+  <div> No jobs here!</div>
 <% end %>
 <%= render 'search' %>
 <ul class='list-group'>
@@ -9,12 +9,14 @@
       <h3 class='text-left'>Total salary: <%= job.total_salary %> €</h3>
       <h3 class='text-left'>Shifts:
         <% job.shifts.each do |shift| %>
-          <p style='text-indent:100px'> <%= "#{shift.period.first.strftime('%d.%m.%Y %H:%M')} - #{shift.period.last.strftime('%d.%m.%Y %H:%M')}" %></p>
+          <p style='text-indent:100px'> <%= format_period(shift.period) %> </p>
         <% end %>
       </h3>
-      <div><span class='badge badge-primary'> <%= job.languages.map(&:name).join(', ') %> </span></div>
+      <span class='badge badge-primary'> <%= format_languages(job.languages) %> </span>
       <div style='margin-top:20px'>
-        <button class="btn btn-primary"><%= link_to 'apply', apply_jobs_path(job_id: job.id), method: :post, class: 'btn-primary' %></button>
+        <button class="btn btn-primary">
+          <%= link_to 'apply', apply_jobs_path(job_id: job.id), method: :post, class: 'btn-primary' %>
+        </button>
       </div>
     </li>
   <% end %>

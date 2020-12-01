@@ -28,7 +28,12 @@ class JobsController < ApplicationController
     authorize! :read, Job
     id = params.dig('job_id')
     job = Job.find(id)
-    job.users << current_user ? flash[:success] = 'Applied' : flash[:error] = 'You have already applied'
+    job.users << current_user
+    flash[:success] = 'Applied'
+  rescue ActiveRecord::RecordInvalid
+    flash[:error] = 'You have already applied'
+  ensure
+    redirect_to jobs_path
   end
 
   private
