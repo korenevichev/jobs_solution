@@ -5,7 +5,7 @@ class Shift < ActiveRecord::Base
   validates :from, presence: true, on: :create
   validates :to, presence: true, on: :create
 
-  before_save :populate_period
+  before_create :populate_period
 
   private
 
