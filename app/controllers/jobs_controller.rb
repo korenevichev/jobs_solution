@@ -2,9 +2,9 @@ class JobsController < ApplicationController
   PER_PAGE = 10
 
   def index
-    @jobs = Rails.cache.fetch('jobs', expires_in: 15.minutes) do
-      job_search_query
-    end.paginate(page: params[:page], per_page: PER_PAGE)
+    @jobs = Rails.cache.fetch("jobs-#{params[:page]}", expires_in: 15.minutes) do
+      job_search_query.paginate(page: params[:page], per_page: PER_PAGE).load
+    end
   end
 
   def new
